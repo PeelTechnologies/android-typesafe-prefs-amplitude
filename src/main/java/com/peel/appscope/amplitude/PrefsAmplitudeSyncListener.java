@@ -28,20 +28,22 @@ import com.peel.prefs.PrefsKey;
  *
  * @author Inderjeet Singh
  */
-public final class PrefsAmplitudeSyncListener implements Prefs.EventListener {
+public class PrefsAmplitudeSyncListener implements Prefs.EventListener {
     private final AmplitudeClient amplitudeClient;
+    private final String amplitudeTag;
 
     public PrefsAmplitudeSyncListener() {
-        this(Amplitude.getInstance());
+        this(Amplitude.getInstance(), "amplitude");
     }
 
-    public PrefsAmplitudeSyncListener(AmplitudeClient client) {
+    public PrefsAmplitudeSyncListener(AmplitudeClient client, String amplitudeTag) {
         this.amplitudeClient = client;
+        this.amplitudeTag = amplitudeTag;
     }
 
     @Override
     public <T> void onPut(PrefsKey<T> key, T value) {
-        if (key instanceof PrefsKeyAmplitudeSynced) {
+        if (key.containsTag(amplitudeTag)) {
             try {
                 JSONObject props = new JSONObject();
                 props.put(key.getName(), value);
@@ -54,7 +56,7 @@ public final class PrefsAmplitudeSyncListener implements Prefs.EventListener {
     @Override
     public <T> void onRemove(PrefsKey<T> key) {
         try {
-            if (key instanceof PrefsKeyAmplitudeSynced && key.getTypeOfValue() == Boolean.class) {
+            if (key.containsTag(amplitudeTag) && key.getTypeOfValue() == Boolean.class) {
                 // Only for boolean keys, set them to false in Amplitude
                 JSONObject props = new JSONObject();
                 props.put(key.getName(), false);

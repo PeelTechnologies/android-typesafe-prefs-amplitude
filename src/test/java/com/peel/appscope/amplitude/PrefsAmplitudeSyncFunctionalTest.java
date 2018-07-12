@@ -48,6 +48,7 @@ import android.preference.PreferenceManager;
 @PrepareForTest({Context.class, SharedPreferences.class, PreferenceManager.class, Amplitude.class})
 public class PrefsAmplitudeSyncFunctionalTest {
 
+    private static final String AMPLITUDE_SYNCED = "amplitudeSynced";
     private Prefs prefs;
     private AmplitudeClient amplitudeClient;
     private JSONObject userProperties;
@@ -64,12 +65,12 @@ public class PrefsAmplitudeSyncFunctionalTest {
                 return null;
             }
         }).when(amplitudeClient).setUserProperties(Mockito.any(JSONObject.class));
-        prefs.addListener(new PrefsAmplitudeSyncListener(amplitudeClient));
+        prefs.addListener(new PrefsAmplitudeSyncListener(amplitudeClient, AMPLITUDE_SYNCED));
     }
 
     @Test
     public void testAmplitudeSync() throws Exception {
-        PrefsKeyAmplitudeSynced<String> sync = new PrefsKeyAmplitudeSynced<>("sync", String.class);
+        PrefsKey<String> sync = new PrefsKey<>("sync", String.class, AMPLITUDE_SYNCED);
         prefs.put(sync, "test");
         assertEquals("test", userProperties.get("sync"));
 
@@ -81,7 +82,7 @@ public class PrefsAmplitudeSyncFunctionalTest {
 
     @Test
     public void testAmplitudeUnsetOnBooleanPropertyRemoval() throws Exception {
-        PrefsKeyAmplitudeSynced<Boolean> bool = new PrefsKeyAmplitudeSynced<>("bool", Boolean.class);
+        PrefsKey<Boolean> bool = new PrefsKey<>("bool", Boolean.class, AMPLITUDE_SYNCED);
         prefs.put(bool, true);
         assertTrue(userProperties.getBoolean("bool"));
 
