@@ -8,4 +8,4 @@ Extension to automatically sync [prefs](https://github.com/PeelTechnologies/andr
         maven { url "https://jitpack.io" }
     }
     ```
-* In your app build.gradle, add:  ```implementation "com.github.PeelTechnologies:android-typesafe-prefs-amplitude:1.0.1"```
+* In your app build.gradle, add:  ```implementation "com.github.PeelTechnologies:android-typesafe-prefs-amplitude:1.0.2"```

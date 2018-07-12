@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.peel.appscope.amplitude;
+package com.peel.prefs.amplitude;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -34,6 +34,7 @@ import com.amplitude.api.AmplitudeClient;
 import com.google.gson.Gson;
 import com.peel.prefs.Prefs;
 import com.peel.prefs.PrefsKey;
+import com.peel.prefs.amplitude.PrefsAmplitudeSyncListener;
 
 import android.content.Context;
 import android.content.SharedPreferences;
