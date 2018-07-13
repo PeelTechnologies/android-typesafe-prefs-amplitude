@@ -33,7 +33,7 @@ import com.amplitude.api.Amplitude;
 import com.amplitude.api.AmplitudeClient;
 import com.google.gson.Gson;
 import com.peel.prefs.Prefs;
-import com.peel.prefs.PrefsKey;
+import com.peel.prefs.TypedKey;
 import com.peel.prefs.amplitude.PrefsAmplitudeSyncListener;
 
 import android.content.Context;
@@ -71,19 +71,19 @@ public class PrefsAmplitudeSyncFunctionalTest {
 
     @Test
     public void testAmplitudeSync() throws Exception {
-        PrefsKey<String> sync = new PrefsKey<>("sync", String.class, AMPLITUDE_SYNCED);
+        TypedKey<String> sync = new TypedKey<>("sync", String.class, AMPLITUDE_SYNCED);
         prefs.put(sync, "test");
         assertEquals("test", userProperties.get("sync"));
 
         // assert that amplitude sync doesn't happen for non-synced properties
-        PrefsKey<String> nosync = new PrefsKey<>("nosync", String.class);
+        TypedKey<String> nosync = new TypedKey<>("nosync", String.class);
         prefs.put(nosync, "test");
         assertFalse(userProperties.has("nosync"));
     }
 
     @Test
     public void testAmplitudeUnsetOnBooleanPropertyRemoval() throws Exception {
-        PrefsKey<Boolean> bool = new PrefsKey<>("bool", Boolean.class, AMPLITUDE_SYNCED);
+        TypedKey<Boolean> bool = new TypedKey<>("bool", Boolean.class, AMPLITUDE_SYNCED);
         prefs.put(bool, true);
         assertTrue(userProperties.getBoolean("bool"));
 

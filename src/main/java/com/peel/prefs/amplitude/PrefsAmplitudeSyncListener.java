@@ -20,7 +20,7 @@ import org.json.JSONObject;
 import com.amplitude.api.Amplitude;
 import com.amplitude.api.AmplitudeClient;
 import com.peel.prefs.Prefs;
-import com.peel.prefs.PrefsKey;
+import com.peel.prefs.TypedKey;
 
 /**
  * Bind this listener to {@code Prefs#addListener(Prefs.EventListener)} to automatically sync all
@@ -42,7 +42,7 @@ public class PrefsAmplitudeSyncListener implements Prefs.EventListener {
     }
 
     @Override
-    public <T> void onPut(PrefsKey<T> key, T value) {
+    public <T> void onPut(TypedKey<T> key, T value) {
         if (key.containsTag(amplitudeTag)) {
             try {
                 JSONObject props = new JSONObject();
@@ -54,7 +54,7 @@ public class PrefsAmplitudeSyncListener implements Prefs.EventListener {
     }
 
     @Override
-    public <T> void onRemove(PrefsKey<T> key) {
+    public <T> void onRemove(TypedKey<T> key) {
         try {
             if (key.containsTag(amplitudeTag) && key.getTypeOfValue() == Boolean.class) {
                 // Only for boolean keys, set them to false in Amplitude
