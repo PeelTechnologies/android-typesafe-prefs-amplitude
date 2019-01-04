@@ -15,10 +15,13 @@
  */
 package com.peel.prefs.amplitude;
 
+import java.lang.reflect.Type;
+
 import org.json.JSONObject;
 
 import com.amplitude.api.Amplitude;
 import com.amplitude.api.AmplitudeClient;
+import com.google.gson.Gson;
 import com.peel.prefs.Prefs;
 import com.peel.prefs.TypedKey;
 
@@ -31,13 +34,15 @@ import com.peel.prefs.TypedKey;
 public class PrefsAmplitudeSyncListener implements Prefs.EventListener {
     private final AmplitudeClient amplitudeClient;
     private final String amplitudeTag;
+    private Gson gson;
 
-    public PrefsAmplitudeSyncListener() {
-        this(Amplitude.getInstance(), "amplitude");
+    public PrefsAmplitudeSyncListener(Gson gson) {
+        this(Amplitude.getInstance(), gson, "amplitude");
     }
 
-    public PrefsAmplitudeSyncListener(AmplitudeClient client, String amplitudeTag) {
+    public PrefsAmplitudeSyncListener(AmplitudeClient client, Gson gson, String amplitudeTag) {
         this.amplitudeClient = client;
+        this.gson = gson;
         this.amplitudeTag = amplitudeTag;
     }
 
@@ -46,11 +51,20 @@ public class PrefsAmplitudeSyncListener implements Prefs.EventListener {
         if (key.containsTag(amplitudeTag)) {
             try {
                 JSONObject props = new JSONObject();
-                props.put(key.getName(), value);
+                String keyName = key.getName();
+                if (isPrimitive(key.getTypeOfValue()) || value instanceof String) {
+                    props.put(keyName, value);
+                } else {
+                    props.put(keyName, gson.toJson(value));
+                }
                 amplitudeClient.setUserProperties(props);
             } catch (Exception ignored) {
             }
         }
+    }
+
+    private <T> boolean isPrimitive(Type type) {
+        return Primitives.isPrimitive(type) || Primitives.isWrapperType(type);
     }
 
     @Override
